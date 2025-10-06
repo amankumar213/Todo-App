@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Todo-App</title>
+        <link rel="stylesheet" href="style.css" />
+        <style>
+      form,
+      #container {
+        position: relative;
+        z-index: 1;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* Body style */
+      body {
+        background: url("https://i.pinimg.com/1200x/01/40/05/0140057e393da191ebbf865498f06c4c.jpg")
+          no-repeat center center/cover;
+
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-top: 50px;
+      }
+
+      body::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(
+          255,
+          192,
+          203,
+          0.5
+        ); /* pink overlay with transparency */
+        z-index: -1;
+      }
+
+      /* Form container */
+      form {
+        background: url("https://i.pinimg.com/1200x/51/23/8d/51238d2615b0875ddd6979f303df5abd.jpg")
+          no-repeat center center/cover;
+        padding: 20px 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        width: 350px;
+        display: flex;
+        color: #151515;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      form input[type="text"] {
+        padding: 12px 15px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      form input[type="text"]:focus {
+        outline: none;
+        border-color: #fcb69f;
+        box-shadow: 0 0 5px #fcb69f;
+      }
+
+      form input[type="submit"] {
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        background: url("https://i.pinimg.com/1200x/f1/2a/67/f12a67877e5c9073b8f4dbee1217c8f6.jpg")
+          no-repeat center center/cover;
+        color: rgb(20, 4, 4);
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      form input[type="submit"]:hover {
+        background: url("https://i.pinimg.com/736x/19/f9/78/19f978e2a75cfd148da81cfff5dee62c.jpg")
+          no-repeat center center/cover;
+        transform: scale(1.05);
+      }
+
+      /* Todo container */
+      #container {
+        margin-top: 30px;
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* Individual todo item */
+      #container div {
+        background: url("https://i.pinimg.com/736x/11/68/12/116812965b0af5c119517a7806b18a1d.jpg")
+          no-repeat center center/cover;
+        padding: 15px 20px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+
+      #container div:hover {
+        transform: scale(1.02);
+        background: url("https://i.pinimg.com/736x/59/0f/de/590fdefd74a05c48a521619aab3bcc46.jpg")
+          no-repeat center center/cover;
+      }
+
+      #container p {
+        font-size: 16px;
+        color: #333;
+        margin-top: 20px;
+      }
+
+      /* Remove button */
+      #container button {
+        background: url("https://i.pinimg.com/1200x/f1/2a/67/f12a67877e5c9073b8f4dbee1217c8f6.jpg")
+          no-repeat center center/cover;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      #container button:hover {
+        background: url("https://i.pinimg.com/1200x/f1/2a/67/f12a67877e5c9073b8f4dbee1217c8f6.jpg")
+          no-repeat center center/cover;
+        transform: scale(1.1);
+      }
+
+      form,
+      #container {
+        position: relative;
+        z-index: 1;
+        margin-left: 50px; /* ensure left alignment */
+      }
+    </style>
+    </head>
+    <body>
+        <form onsubmit="getTodo(event)">
+            <h1
+                style="
+          text-align: center;
+          color: #3f037b;
+          font-family: 'Poppins', sans-serif;
+          margin-bottom: 15px;
+          font-size: 1rem;
+        ">
+                💖 Make Today Amazing! Add Your Todos & Crush Your Goals! 🚀
+            </h1>
+            <b><u>Enter your Todo:</u></b>
+            <label for="todo">
+                <input type="text" id="todo-input" />
+            </label>
+            <input type="submit" />
+        </form>
+        <div id="container"></div>
+        <script>
+      let todos;
+      if (localStorage.getItem("todos")) {
+        todos = JSON.parse(localStorage.getItem("todos"));
+        displayTodos();
+      } else todos = [];
+
+      function getTodo(event) {
+        todos.push(document.getElementById("todo-input").value);
+        displayTodos();
+        document.getElementById("todo-input").value = "";
+        event.preventDefault();
+      }
+
+      function displayTodos() {
+        document.getElementById("container").innerHTML = "";
+
+        todos.map((todo, index) => {
+          const div = document.createElement("div");
+          const p = document.createElement("p");
+          p.innerHTML = todo;
+
+          const button = document.createElement("button");
+          button.innerHTML = "❌";
+          button.onclick = function () {
+            removeTodo(index);
+          };
+
+          div.appendChild(p);
+          div.appendChild(button);
+          document.getElementById("container").appendChild(div);
+        });
+        localStorage.setItem("todos", JSON.stringify(todos));
+      }
+
+      function removeTodo(index) {
+        todos.splice(index, 1);
+        displayTodos();
+      }
+    </script>
+    </body>
+</html>
